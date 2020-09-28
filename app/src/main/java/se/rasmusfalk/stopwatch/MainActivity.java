@@ -41,8 +41,9 @@ public class MainActivity extends AppCompatActivity {
                 timeWhenStopped = 0;
                 counter.stop();
                 counter.setBase(SystemClock.elapsedRealtime());
-                toggle.setText("Start");
-                toggle.setBackgroundResource(R.drawable.primary_btn_background);
+                
+                setToggleButton("Start");
+                
                 isStopped = true;
                 reset.animate().alpha(0).setDuration(300);
             }
@@ -51,28 +52,36 @@ public class MainActivity extends AppCompatActivity {
 
     public void toggleCounter() {
         if (isStopped) {
-            toggle.setText("Stop");
-            toggle.setBackgroundResource(R.drawable.secondary_btn_background);
-
-
-            reset.animate().alpha(1).setDuration(300);
-
-            counter.setBase(SystemClock.elapsedRealtime() + timeWhenStopped);
-            counter.start();
-
-            isStopped = false;
-        } else {
-            toggle.setText("Start");
-            toggle.setBackgroundResource(R.drawable.primary_btn_background);
-
-            timeWhenStopped = counter.getBase() - SystemClock.elapsedRealtime();
-            counter.stop();
-
-            reset.animate().alpha(0).setDuration(300);
-
-            isStopped = true;
+            stopCounter();
+            return;
         }
+        
+        startCounter();
     }
+    
+    public void startCounter() {
+        setToggleButton("Start");
 
-    ;
+        timeWhenStopped = counter.getBase() - SystemClock.elapsedRealtime();
+        counter.stop();
+
+        reset.animate().alpha(0).setDuration(300);
+        isStopped = true;
+    }
+    
+    public void stopCounter() {
+        setToggleButton("Stop");
+
+        reset.animate().alpha(1).setDuration(300);
+
+        counter.setBase(SystemClock.elapsedRealtime() + timeWhenStopped);
+        counter.start();
+
+        isStopped = false;
+    }
+    
+    public void setToggleButton(String label) {
+        toggle.setText(label);
+        toggle.setBackgroundResource(R.drawable.secondary_btn_background);
+    }
 }
